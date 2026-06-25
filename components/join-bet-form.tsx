@@ -36,10 +36,10 @@ export function JoinBetForm({ betId }: { betId: number }) {
           className="mx-auto mb-2 size-8 text-primary"
           aria-hidden="true"
         />
-        <p className="text-sm text-muted-foreground">Tu marcador asignado es</p>
+        <p className="text-sm text-muted-foreground">Tu marcador es</p>
         <p className="mt-1 text-3xl font-bold tabular-nums">{assigned}</p>
         <p className="mt-3 text-sm text-pretty text-muted-foreground">
-          ¡Mucha suerte! Si Colombia termina con este marcador, ganas el pozo.
+          ¡Mucha suerte! 
         </p>
       </div>
     )
@@ -68,7 +68,7 @@ export function JoinBetForm({ betId }: { betId: number }) {
         {isPending ? "Registrando..." : "Registrarme y recibir marcador"}
       </Button>
       <p className="text-center text-xs text-muted-foreground">
-        Se te asignará un marcador al azar entre los disponibles.
+        Se te asignará un marcador 
       </p>
     </form>
   )

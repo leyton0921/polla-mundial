@@ -14,12 +14,6 @@ export function SiteHeader() {
             La Polla de Colombia
           </span>
         </Link>
-        <Link
-          href="/admin"
-          className={buttonVariants({ variant: "outline", size: "sm" })}
-        >
-          Panel admin
-        </Link>
       </div>
     </header>
   )

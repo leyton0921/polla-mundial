@@ -22,23 +22,17 @@ export default async function HomePage() {
       <main className="mx-auto max-w-4xl px-4 py-8">
         <section className="mb-8">
           <h1 className="text-2xl font-bold text-balance sm:text-3xl">
-            Apuestas en familia para Colombia
+            Apuestas para Colombia
           </h1>
           <p className="mt-2 max-w-prose text-pretty leading-relaxed text-muted-foreground">
-            Escoge una apuesta abierta, registra tu nombre y el sistema te
-            asigna un marcador al azar. ¡El que acierte el resultado se lleva
-            todo el pozo!
+            Escribe tu nombre y se te asigna un marcador.
           </p>
         </section>
 
         {bets.length === 0 ? (
           <Card>
             <CardContent className="py-12 text-center text-muted-foreground">
-              Todavía no hay apuestas. El administrador puede crear una desde el{" "}
-              <Link href="/admin" className="font-medium text-primary underline">
-                panel admin
-              </Link>
-              .
+              Todavía no hay apuestas
             </CardContent>
           </Card>
         ) : (
@@ -69,7 +63,7 @@ export default async function HomePage() {
                         <div className="flex items-center gap-2 text-sm text-muted-foreground">
                           <Coins className="size-4 text-accent-foreground" aria-hidden="true" />
                           <span>
-                            Entrada {formatCOP(Number(bet.entry_value))} · Pozo{" "}
+                            valor {formatCOP(Number(bet.entry_value))} · total{" "}
                             <span className="font-semibold text-foreground">
                               {formatCOP(pot)}
                             </span>

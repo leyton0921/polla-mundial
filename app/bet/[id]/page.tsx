@@ -50,7 +50,7 @@ export default async function BetPage({
               Colombia vs {bet.opponent}
             </h1>
             <p className="mt-1 text-sm text-muted-foreground">
-              Entrada por persona: {formatCOP(Number(bet.entry_value))}
+              valor: {formatCOP(Number(bet.entry_value))}
             </p>
           </div>
           {finished ? (
@@ -67,7 +67,7 @@ export default async function BetPage({
             <CardContent className="flex items-center gap-3 py-5">
               <Coins className="size-7 text-accent-foreground" aria-hidden="true" />
               <div>
-                <p className="text-xs text-muted-foreground">Pozo total</p>
+                <p className="text-xs text-muted-foreground">total</p>
                 <p className="text-xl font-bold">{formatCOP(pot)}</p>
               </div>
             </CardContent>
@@ -150,13 +150,13 @@ export default async function BetPage({
             <CardHeader>
               <CardTitle>Participantes</CardTitle>
               <CardDescription>
-                Cada persona tiene un marcador único.
+                Cada persona tiene su marcador
               </CardDescription>
             </CardHeader>
             <CardContent>
               {participants.length === 0 ? (
                 <p className="text-sm text-muted-foreground">
-                  Aún no hay participantes. ¡Sé el primero!
+                  todavía no hay nadie
                 </p>
               ) : (
                 <ul className="divide-y">
