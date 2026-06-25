@@ -17,12 +17,15 @@ export function CreateBetForm() {
   function action(formData: FormData) {
     setError(null)
     setOk(false)
+
     startTransition(async () => {
       const res = await createBet(formData)
+
       if (res?.error) {
         setError(res.error)
         return
       }
+
       if (res?.success) {
         setOk(true)
         formRef.current?.reset()
@@ -43,8 +46,12 @@ export function CreateBetForm() {
           maxLength={60}
         />
       </div>
+
       <div className="space-y-2">
-        <Label htmlFor="entryValue">Valor de entrada (COP)</Label>
+        <Label htmlFor="entryValue">
+          Valor de entrada (COP)
+        </Label>
+
         <Input
           id="entryValue"
           name="entryValue"
@@ -55,33 +62,56 @@ export function CreateBetForm() {
           required
         />
       </div>
+
       <div className="space-y-2">
-        <Label htmlFor="scores">Marcadores posibles</Label>
-        <textarea
-          id="scores"
-          name="scores"
+        <Label htmlFor="maxGoals">
+          Máximo de goles
+        </Label>
+
+        <Input
+          id="maxGoals"
+          name="maxGoals"
+          type="number"
+          min={1}
+          max={10}
+          defaultValue={5}
           required
-          rows={4}
-          placeholder={"Uno por línea o separados por coma:\n2-1, 1-0, 0-0, 3-1, 2-2"}
-          className="flex w-full rounded-md border border-input bg-transparent px-3 py-2 text-sm shadow-sm outline-none placeholder:text-muted-foreground focus-visible:ring-1 focus-visible:ring-ring"
         />
+
         <p className="text-xs text-muted-foreground">
-          Cada marcador se asigna a una sola persona. El número de marcadores es
-          el cupo máximo de jugadores.
+          Se generarán automáticamente todos los marcadores desde
+          0-0 hasta este valor.
+          <br />
+          Ejemplo: 5 genera 36 marcadores disponibles.
         </p>
       </div>
+
       {error && (
-        <p className="text-sm font-medium text-destructive" role="alert">
+        <p
+          className="text-sm font-medium text-destructive"
+          role="alert"
+        >
           {error}
         </p>
       )}
+
       {ok && (
-        <p className="text-sm font-medium text-primary" role="status">
-          ¡Apuesta creada!
+        <p
+          className="text-sm font-medium text-primary"
+          role="status"
+        >
+          ¡Apuesta creada correctamente!
         </p>
       )}
-      <Button type="submit" disabled={isPending}>
-        {isPending ? "Creando..." : "Crear apuesta"}
+
+      <Button
+        type="submit"
+        disabled={isPending}
+        className="w-full"
+      >
+        {isPending
+          ? "Creando..."
+          : "Crear apuesta"}
       </Button>
     </form>
   )

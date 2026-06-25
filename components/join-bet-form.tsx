@@ -53,7 +53,7 @@ export function JoinBetForm({ betId }: { betId: number }) {
         <Input
           id="name"
           name="name"
-          placeholder="Ej. Juan Pérez"
+          placeholder=".."
           required
           maxLength={60}
           autoComplete="off"

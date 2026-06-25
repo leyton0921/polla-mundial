@@ -38,26 +38,66 @@ export type BetDetail = {
   participants: Participant[]
   pot: number
   winners: Participant[]
+  available: number
 }
 
 // ---------- Admin ----------
 
 export async function createBet(formData: FormData) {
-  const opponent = String(formData.get("opponent") ?? "").trim()
-  const entryValue = Number(formData.get("entryValue") ?? 0)
-  const scoresRaw = String(formData.get("scores") ?? "")
+  const opponent = String(
+    formData.get("opponent") ?? "",
+  ).trim()
 
-  const scores = scoresRaw
-    .split(/[\n,]/)
-    .map((s) => s.trim())
-    .filter(Boolean)
+  const entryValue = Number(
+    formData.get("entryValue") ?? 0,
+  )
 
-  if (!opponent) return { error: "Escribe el equipo rival." }
-  if (!Number.isFinite(entryValue) || entryValue <= 0)
-    return { error: "El valor de entrada debe ser mayor a 0." }
-  if (scores.length === 0)
-    return { error: "Agrega al menos un marcador posible." }
+  const maxGoals = Number(
+    formData.get("maxGoals") ?? 5,
+  )
 
+  if (!opponent) {
+    return {
+      error: "Escribe el equipo rival.",
+    }
+  }
+
+  if (
+    !Number.isFinite(entryValue) ||
+    entryValue <= 0
+  ) {
+    return {
+      error:
+        "El valor de entrada debe ser mayor a 0.",
+    }
+  }
+
+  if (
+    !Number.isFinite(maxGoals) ||
+    maxGoals < 1 ||
+    maxGoals > 10
+  ) {
+    return {
+      error:
+        "Máximo de goles inválido.",
+    }
+  }
+
+  const scores: string[] = []
+
+  for (
+    let home = 0;
+    home <= maxGoals;
+    home++
+  ) {
+    for (
+      let away = 0;
+      away <= maxGoals;
+      away++
+    ) {
+      scores.push(`${home}-${away}`)
+    }
+  }
   const client = await pool.connect()
   try {
     await client.query("BEGIN")
@@ -224,25 +264,55 @@ export async function getAdminBets(): Promise<
   }))
 }
 
-export async function getBetDetail(betId: number): Promise<BetDetail | null> {
-  const bets = await query<Bet>(`SELECT * FROM bets WHERE id = $1`, [betId])
-  if (bets.length === 0) return null
+export async function getBetDetail(
+  betId: number,
+): Promise<BetDetail | null> {
+  const bets = await query<Bet>(
+    `SELECT * FROM bets WHERE id = $1`,
+    [betId],
+  )
+
+  if (bets.length === 0) {
+    return null
+  }
+
   const bet = bets[0]
 
   const scores = await query<PossibleScore>(
-    `SELECT * FROM possible_scores WHERE bet_id = $1 ORDER BY id ASC`,
-    [betId],
-  )
-  const participants = await query<Participant>(
-    `SELECT * FROM participants WHERE bet_id = $1 ORDER BY created_at ASC`,
+    `SELECT * FROM possible_scores
+     WHERE bet_id = $1
+     ORDER BY id ASC`,
     [betId],
   )
 
-  const pot = Number(bet.entry_value) * participants.length
+  const participants = await query<Participant>(
+    `SELECT * FROM participants
+     WHERE bet_id = $1
+     ORDER BY created_at ASC`,
+    [betId],
+  )
+
+  const pot =
+    Number(bet.entry_value) *
+    participants.length
+
   const winners =
     bet.real_score != null
-      ? participants.filter((p) => p.score === bet.real_score)
+      ? participants.filter(
+        (p) => p.score === bet.real_score,
+      )
       : []
 
-  return { bet, scores, participants, pot, winners }
+  const available =
+    scores.length -
+    participants.length
+
+  return {
+    bet,
+    scores,
+    participants,
+    pot,
+    winners,
+    available,
+  }
 }
